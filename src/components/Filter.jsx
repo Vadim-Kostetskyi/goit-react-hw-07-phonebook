@@ -1,12 +1,15 @@
 import { useDispatch } from 'react-redux';
 import { filter } from 'redux/Slise';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const Filter = () => {
   const [filterName, setFilterName] = useState('');
 
   const dispach = useDispatch();
-  dispach(filter(filterName));
+  useEffect(() => {
+    dispach(filter(filterName));
+    // eslint-disable-next-line
+  }, [filterName]);
 
   const changeFilter = el => {
     setFilterName(el.target.value);

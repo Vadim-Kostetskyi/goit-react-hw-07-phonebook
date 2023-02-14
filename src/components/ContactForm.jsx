@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addContact, saveContacts } from 'redux/Slise';
+import { fetchContactsApi, addContactsApi } from 'redux/contactApi';
 import { nanoid } from 'nanoid';
-import { useSelector } from 'react-redux';
 
 export const ContactForm = () => {
   const dispach = useDispatch();
@@ -21,7 +21,7 @@ export const ContactForm = () => {
         break;
       case 'number':
         setnumber(inputValue);
-
+        break;
       default:
         break;
     }
@@ -32,10 +32,14 @@ export const ContactForm = () => {
     const unique = contacts.map(elem =>
       name.toLowerCase() !== elem.name.toLowerCase() ? true : false
     );
+    if (unique.includes(false)) {
+      alert(`${name} is alredy in contacts`);
+      return;
+    }
 
-    unique.includes(false)
-      ? alert(`${name} is alredy in contacts`)
-      : dispach(addContact({ id: nanoid(), name: name, number: number }));
+    dispach(addContact({ name: name, phone: number, id: nanoid() }));
+    dispach(addContactsApi({ name: name, phone: number, id: nanoid() }));
+    setTimeout(() => dispach(fetchContactsApi()), 200);
 
     reset();
   };
